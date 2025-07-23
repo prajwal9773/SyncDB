@@ -1,33 +1,33 @@
-A Near Real-Time / Configurable Data Synchronization System
+# A Near Real-Time / Configurable Data Synchronization System
 
-Tech Stack
+## Tech Stack
 
-Backend: Node.js, Express, Mongoose (MongoDB)
+* **Backend**: Node.js, Express, Mongoose (MongoDB)
+* **Frontend**: React (Hooks, EventSource for SSE)
+* **Database**: MongoDB (two collections simulate local & cloud)
 
-Frontend: React (Hooks, EventSource for SSE)
+## Detailed Approach
 
-Database: MongoDB (two collections simulate local & cloud)
+### Separate Collections
 
+Two collections in MongoDB are used: one simulating local data and another simulating cloud data.
 
-Detailed Approach
+### Change Detection
 
-Separate Collections: Two collections in MongoDB are used: one simulating local data and another simulating cloud data.
+Each document includes a `lastModified` timestamp. During synchronization, the service checks for documents modified after the last sync in either collection.
 
-Change Detection: Each document has a lastModified timestamp. During sync, the service checks for documents modified after the last sync in either collection.
+### Conflict Resolution
 
-Conflict Resolution: If the same document changed in both local and cloud, a field-based merge strategy is used:
+When the same document has changes in both local and cloud collections, a **field-based merge strategy** is applied:
 
-Compare fields individually based on timestamps or priority rules.
+* Compare each field based on timestamps or predefined priority rules.
+* Merge only the newer field values instead of overwriting the entire document blindly.
 
-Merge the newer values for fields instead of overwriting the entire document blindly.
+### Sync Directions
 
-Sync Directions:
+* **Local → Cloud**
+* **Cloud → Local**
+* **Both Directions (configurable)**
+* **Forced Overwrite (optional)**
 
-Local → Cloud
-
-Cloud → Local
-
-Both directions (configurable)
-
-Forced overwrite (optional)
 
